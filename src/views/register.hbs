@@ -5,12 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Regístrate</title>
-    <!-- Agrega el enlace al archivo CSS de Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
-<body class="bg-light">
-    <div class="container mt-5">
+<body class="bg-light d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+    <div class="container">
         <div class="card p-4">
             <h2 class="text-center">Regístrate</h2>
             <form action="/register" method="post">
@@ -49,7 +48,7 @@
 
                 <div class="form-group">
                     <label for="contrasena">Contraseña:</label>
-                    <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+                    <input type="password" class="form-control" id="password" name="password" required>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Registrarse</button>
@@ -61,8 +60,6 @@
             <p class="mt-3">¿Ya tienes cuenta? <a href="/login">Inicia Sesión</a></p>
         </div>
     </div>
-
-    <!-- Agrega el enlace al archivo JS de Bootstrap (opcional, dependiendo de tus necesidades) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

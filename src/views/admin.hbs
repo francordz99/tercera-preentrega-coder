@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Turbocenter</title>
+</head>
+
+<body>
+
+    <header>
+        <h1>Turbocenter</h1>
+        <nav>
+            <a href="/">Inicio</a>
+            <a href="/products">Productos</a>
+            <a href="/profile">Perfil</a>
+            <a href="/about">Sobre Nosotros</a>
+            <a href="/contact">Contáctanos</a>
+            <a href="/login">Inicia Sesión</a>
+            <a href="/register">Regístrate</a>
+            <a href="/logout">Cerrar Sesión</a>
+            <a href="/cart">Carrito</a>
+            <a href="/support">Soporte</a>
+            <a href="/admin">Panel de Administración</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Panel de Administración</h2>
+        <section class="add-product-form">
+            <h3>Agregar Producto</h3>
+            <form action="/admin/addProduct" method="post">
+                <label for="product-name">Nombre del Producto:</label>
+                <input type="text" id="product-name" name="product-name" required>
+
+                <label for="product-description">Descripción:</label>
+                <textarea id="product-description" name="product-description" required></textarea>
+
+                <label for="product-price">Precio:</label>
+                <input type="number" id="product-price" name="product-price" required>
+
+                <!-- Agrega otros campos según tus necesidades, como imagen, categoría, etc. -->
+
+                <button type="submit">Agregar Producto</button>
+            </form>
+        </section>
+
+        <section class="support-messages">
+            <h3>Mensajes de Soporte</h3>
+            <div id="messagesArea">
+                <h4>Solicitudes Pendientes</h4>
+            </div>
+        </section>
+
+        <section class="edit-product-form">
+            <h3>Editar Producto</h3>
+            <form action="/admin/editProduct" method="post">
+                <label for="edit-product-code">Código del Producto a Editar:</label>
+                <input type="text" id="edit-product-code" name="edit-product-code" required>
+
+                <!-- Incluye campos adicionales para editar, como nombre, descripción, precio, etc. -->
+
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </section>
+
+        <section class="grant-permissions-form">
+            <h3>Conceder Permisos de Administración</h3>
+            <form action="/admin/grantPermissions" method="post">
+                <!-- Formulario para dar permisos de administración a otro usuario -->
+                <label for="username">Nombre de Usuario:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="permission-level">Nivel de Permisos:</label>
+                <select id="permission-level" name="permission-level" required>
+                    <option value="basic">Básico</option>
+                    <option value="admin">Administrador</option>
+                </select>
+
+                <button type="submit">Conceder Permisos</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-column">
+            <h3>Redes Sociales</h3>
+            <div class="social-icons">
+                <a href="#" target="_blank">Facebook</a>
+                <a href="#" target="_blank">Instagram</a>
+                <a href="#" target="_blank">Twitter</a>
+                <a href="#" target="_blank">TikTok</a>
+            </div>
+        </div>
+
+        <div class="links-column">
+            <h3>Enlaces</h3>
+            <ul>
+                <li><a href="#">Legislaciones</a></li>
+                <li><a href="#">Trabaja con nosotros</a></li>
+                <li><a href="#">Términos y Condiciones</a></li>
+                <li><a href="#">Reporta un error</a></li>
+            </ul>
+        </div>
+        <p>Sitio creado por francordz99</p>
+    </footer>
+
+</body>
+
+</html>
