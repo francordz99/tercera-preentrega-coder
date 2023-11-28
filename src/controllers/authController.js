@@ -1,4 +1,5 @@
 import User from '../models/userModel.js';
+import Cart from '../models/cartModel.js';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/dotenvConfig.js';
 import { isValidPassword, createHash } from '../utils.js';
@@ -7,7 +8,6 @@ const authController = {
     register: async (req, res) => {
         try {
             const { nombre, apellido, sexo, edad, email, celular, password } = req.body;
-            console.log(req.body);
             const hashedPassword = await createHash(password);
             const user = new User({
                 nombre,
@@ -16,8 +16,15 @@ const authController = {
                 edad,
                 email,
                 celular,
-                password: hashedPassword
+                password: hashedPassword,
             });
+            await user.save();
+            const newCart = new Cart({
+                email: user.email,
+                products: [],
+            });
+            await newCart.save();
+            user.cart = newCart._id;
             await user.save();
             res.redirect('/login');
         } catch (error) {

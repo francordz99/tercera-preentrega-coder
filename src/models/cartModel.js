@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
-import Product from './productModel';
-import User from './userModel';
+import Product from './productModel.js';
+import User from './userModel.js';
 
 const { Schema } = mongoose;
 
 const cartSchema = new Schema({
     email: {
         type: String,
-        ref: User.email,
+        ref: User,
         required: true
     },
     products: [{

@@ -4,13 +4,12 @@ import { connectDB } from "./config/databaseConfig.js";
 import { engine } from "express-handlebars";
 import methodOverride from 'method-override';
 import path from 'path';
-import http from 'http';
 import bodyParser from 'body-parser';
 import cookieParser from "cookie-parser";
 import configureSocket from './config/socketConfig.js';
 import authRoutes from "./routes/auth.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
-/*import cartRoutes from "./routes/cart.routes.js";*/
+import cartRoutes from "./routes/cart.routes.js";
 import mainRoutes from "./routes/main.routes.js";
 import usersRoutes from "./routes/users.routes.js";
 import messagesRoutes from "./routes/messages.routes.js";
@@ -27,7 +26,7 @@ const { io, server } = configureSocket(app);
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('public', { 'extensions': ['html', 'htm', 'js', 'css'] }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
@@ -51,7 +50,7 @@ connectDB();
 
 app.use('/', authRoutes);
 app.use('/', adminRoutes);
-/*app.use('/', cartRoutes);*/
+app.use('/', cartRoutes);
 app.use('/', mainRoutes);
 app.use('/', messagesRoutes);
 app.use('/', usersRoutes);
