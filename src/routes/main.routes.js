@@ -15,6 +15,5 @@ mainRoutes.get('/cart', authenticateToken, checkUserRole, mainController.getCart
 mainRoutes.get('/contact', authenticateToken, checkUserRole, mainController.getContact);
 mainRoutes.get('/about', authenticateToken, mainController.getAbout);
 mainRoutes.get('/support', authenticateToken, checkUserRole, mainController.getSupport);
-mainRoutes.get('/admin', authenticateToken, checkAdminRole, mainController.getAdmin);
 
 export default mainRoutes;

@@ -46,18 +46,6 @@ const mainController = {
     },
     getAbout: (req, res) => {
         res.render('about');
-    },
-    getAdmin: async (req, res) => {
-        try {
-            if (req.isAdmin) {
-                res.render('admin');
-            } else {
-                res.status(403).send("Acceso No Autorizado");
-            }
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Error al verificar el rol del usuario: ' + error.message);
-        }
     }
 };
 
