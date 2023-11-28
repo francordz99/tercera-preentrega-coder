@@ -4,7 +4,6 @@ export class userInfoDto {
             this.apellido = userInfo.apellido,
             this.email = userInfo.email,
             this.celular = userInfo.celular,
-            this.sexo = userInfo.sexo,
             this.edad = userInfo.edad
     }
 };

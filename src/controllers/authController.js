@@ -48,6 +48,14 @@ const authController = {
         res.cookie('token', '', { expires: new Date(0), httpOnly: true });
         res.redirect('/login');
     },
+
+    getLogin: (req, res) => {
+        res.render('login');
+    },
+
+    getRegister: (req, res) => {
+        res.render('register');
+    }
 };
 
 export default authController;

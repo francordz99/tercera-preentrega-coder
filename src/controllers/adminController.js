@@ -1,4 +1,5 @@
 import Product from "../models/productModel.js";
+import User from "../models/userModel.js";
 
 const adminController = {
     getAdmin: async (req, res) => {
@@ -84,6 +85,26 @@ const adminController = {
         } catch (error) {
             console.error(error);
             const errorMessage = 'Error al eliminar el producto: ' + error.message;
+            res.render('admin', { errorMessage });
+        }
+    },
+    editPermissions: async (req, res) => {
+        try {
+            const { email, permissionLevel } = req.body;
+            const user = await User.findOne({ email: email });
+            console.log(permissionLevel);
+            if (!user) {
+                return res.status(404).send('Usuario no encontrado.');
+            }
+            user.role = permissionLevel;
+            await user.save();
+
+            const successMessage = 'Permisos actualizados con éxito.';
+            res.render('admin', { successMessage });
+
+        } catch (error) {
+            console.error(error);
+            const errorMessage = 'Error al editar permisos: ' + error.message;
             res.render('admin', { errorMessage });
         }
     }

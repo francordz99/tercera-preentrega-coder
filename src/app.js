@@ -1,27 +1,28 @@
 import express from "express";
 import { __dirname, __filename, } from "./utils.js";
-import { config } from "./config/dotenvConfig.js";
 import { connectDB } from "./config/databaseConfig.js";
 import { engine } from "express-handlebars";
-/*import socketIo from 'socket.io';*/
 import methodOverride from 'method-override';
 import path from 'path';
 import http from 'http';
 import bodyParser from 'body-parser';
 import cookieParser from "cookie-parser";
+import configureSocket from './config/socketConfig.js';
 import authRoutes from "./routes/auth.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 /*import cartRoutes from "./routes/cart.routes.js";*/
 import mainRoutes from "./routes/main.routes.js";
-/*import messagesRoutes from "./routes/messages.routes.js";
-import productsRoutes from "./routes/products.routes.js";*/
+import usersRoutes from "./routes/users.routes.js";
+import messagesRoutes from "./routes/messages.routes.js";
+import productsRoutes from "./routes/products.routes.js";
 
 // Express & Socket
 
 const app = express();
 const port = 8080;
-const server = http.createServer(app);
-/*const io = socketIo(server);*/
+const { io, server } = configureSocket(app);
+
+// Middlewares
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
@@ -52,8 +53,9 @@ app.use('/', authRoutes);
 app.use('/', adminRoutes);
 /*app.use('/', cartRoutes);*/
 app.use('/', mainRoutes);
-/*app.use('/', messagesRoutes);
-app.use('/', productsRoutes);*/
+app.use('/', messagesRoutes);
+app.use('/', usersRoutes);
+app.use('/', productsRoutes);
 
 // Arranque Del Server
 

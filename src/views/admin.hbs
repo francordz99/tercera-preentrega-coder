@@ -18,6 +18,7 @@
             <a href="/products">Productos</a>
             <a href="/profile">Perfil</a>
             <a href="/about">Sobre Nosotros</a>
+            <a href="/chat">Chat</a>
             <a href="/contact">Contáctanos</a>
             <a href="/login">Inicia Sesión</a>
             <a href="/register">Regístrate</a>
@@ -132,14 +133,14 @@
 
 
         <section class="grant-permissions-form">
-            <h3>Conceder Permisos de Administración</h3>
-            <form action="/admin/grantPermissions" method="post">
-                <label for="username">Nombre de Usuario:</label>
-                <input type="text" id="username" name="username" required>
+            <h3>Dar O Quitar Permisos de Administración</h3>
+            <form method="post" action="/admin/editPermissions?_method=PUT">
+                <label for="email">Correo Electronico:</label>
+                <input type="text" id="email" name="email" required>
 
                 <label for="permission-level">Nivel de Permisos:</label>
-                <select id="permission-level" name="permission-level" required>
-                    <option value="basic">Básico</option>
+                <select id="permission-level" name="permissionLevel" required>
+                    <option value="user">Usuario</option>
                     <option value="admin">Administrador</option>
                 </select>
 

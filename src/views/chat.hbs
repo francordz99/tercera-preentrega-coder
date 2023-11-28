@@ -27,32 +27,28 @@
         </nav>
     </header>
     <main>
-        <section class="featured-products">
-            <h2>Productos Destacados</h2>
-            <div class="product">
-                <img src="original_part.jpg" alt="Pieza Original">
-                <h3>Pieza Original</h3>
-                <p>Garantizamos la autenticidad y calidad de nuestras piezas originales para tu vehículo.</p>
-            </div>
-            <div class="product">
-                <img src="competition_part.jpg" alt="Pieza de Competición">
-                <h3>Pieza de Competición</h3>
-                <p>¿Listo para llevar tu vehículo al siguiente nivel? Descubre nuestras piezas de competición de alto
-                    rendimiento.</p>
-            </div>
-        </section>
+        <section>
+            <h2>Enviar Mensaje</h2>
+            <form action="/chat/send" method="post">
+                <label for="nick">Nick:</label>
+                <input type="text" id="nick" name="nick" required>
 
-        <section class="about-us">
-            <h2>Sobre Nosotros</h2>
-            <p>En Turbocenter, nos apasiona el mundo del automovilismo. Nos especializamos en ofrecer una amplia gama de
-                piezas de auto, desde componentes originales hasta piezas de competición para entusiastas y
-                profesionales.</p>
-        </section>
+                <label for="contenido">Contenido:</label>
+                <textarea id="contenido" name="contenido" rows="4" required></textarea>
 
-        <section class="how-to-order">
-            <h2>Cómo Ordenar</h2>
-            <p>Realizar un pedido en Turbocenter es fácil. Navega por nuestras categorías, selecciona los productos que
-                necesitas y agrégales al carrito. ¡Listo para mejorar tu vehículo!</p>
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
+        <section id="chat-section">
+            <h3>Mensajes Previos Y Nuevos</h3>
+            <div id="messages-container">
+                {{#each messages}}
+                <div class="message">
+                    <p><strong>{{this.sender}}</strong>: {{this.content}}</p>
+                    <p>{{this.timestamp}}</p>
+                </div>
+                {{/each}}
+            </div>
         </section>
     </main>
     <footer>
@@ -78,6 +74,9 @@
         <p>Sitio creado por francordz99</p>
 
     </footer>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"
+        integrity="sha384-mZLF4UVrpi/QTWPA7BjNPEnkIfRFn4ZEO3Qt/HFklTJBj/gBOV8G3HcKn4NfQblz"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
