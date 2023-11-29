@@ -2,6 +2,7 @@ import Cart from "../models/cartModel.js";
 import Product from "../models/productModel.js";
 import Ticket from "../models/ticketModel.js";
 import jwt from "jsonwebtoken";
+import { transporter } from "../config/nodemailerConfig.js";
 import { config } from "../config/dotenvConfig.js";
 
 const cartController = {
@@ -148,7 +149,19 @@ const cartController = {
                     await Product.findByIdAndUpdate(existingProduct._id, { $inc: { stock: -product.quantity } });
                 }
             }
+
+            // Limpiar el carrito después de la compra
             await Cart.findOneAndUpdate({ email: userEmail }, { $set: { products: [] } });
+
+            // Enviar el correo después de realizar la compra
+            const result = await transporter.sendMail({
+                from: config.nodemailer.gmaccount,
+                to: userEmail,
+                subject: "Compra Exitosa - ECommerce",
+                html: `<p>Gracias por tu compra. Tu código de ticket es: ${ticketCode}</p>`
+            });
+
+            // Responder con éxito y el código de ticket
             return res.status(200).json({ success: true, message: 'Compra exitosa', ticketCode: ticketCode });
         } catch (error) {
             console.error(error);
