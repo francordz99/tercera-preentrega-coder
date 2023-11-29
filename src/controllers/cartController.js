@@ -1,11 +1,10 @@
 import Cart from "../dao/models/cartModel.js";
 import Product from "../dao/models/productModel.js";
-import Ticket from "../dao/models/ticketModel.js";
 import jwt from "jsonwebtoken";
-import { transporter } from "../config/nodemailerConfig.js";
+import MailingService from "../services/mailing.service.js";
+import TicketService from "../services/ticket.service.js";
 import { config } from "../config/dotenvConfig.js";
 import { __dirname } from "../utils.js";
-import path from 'path'
 
 const cartController = {
     addProductToCart: async (req, res) => {
@@ -116,10 +115,12 @@ const cartController = {
             if (!cart || !cart.products || cart.products.length === 0) {
                 return res.status(404).json({ success: false, message: 'El carrito está vacío' });
             }
+
             const productsToBuy = cart.products;
+
             for (const product of productsToBuy) {
                 const existingProduct = await Product.findById(product.product);
-                console.log(existingProduct);
+
                 if (!existingProduct || existingProduct.stock < product.quantity) {
                     return res.status(400).json({
                         success: false,
@@ -127,51 +128,31 @@ const cartController = {
                     });
                 }
             }
-            const ticketCode = generateTicketCode();
+
+            const ticketCode = TicketService.generateTicketCode();
             const purchaseDateTime = new Date();
             const amount = parseFloat(req.body.total);
             const purchaser = userEmail;
 
-            function generateTicketCode() {
-                const randomNumber = Math.floor(Math.random() * 1000000000000);
-                const ticketCode = `TICKET${randomNumber.toString().padStart(12, '0')}`;
-                return ticketCode;
-            }
+            await TicketService.createTicket(ticketCode, purchaseDateTime, amount, purchaser);
 
-            const newTicket = new Ticket({
-                code: ticketCode,
-                purchaseDateTime: purchaseDateTime,
-                amount: amount,
-                purchaser: purchaser,
-            });
-            await newTicket.save();
             for (const product of productsToBuy) {
                 const existingProduct = await Product.findById(product.product);
+
                 if (existingProduct) {
                     await Product.findByIdAndUpdate(existingProduct._id, { $inc: { stock: -product.quantity } });
                 }
             }
+
             await Cart.findOneAndUpdate({ email: userEmail }, { $set: { products: [] } });
-            const result = await transporter.sendMail({
-                from: config.nodemailer.gmaccount,
-                to: userEmail,
-                subject: "Compra Exitosa - ECommerce",
-                html: `<p>Gracias por tu compra. Tu código de ticket es: ${ticketCode}</p>
-                    <img src="cid:success">`,
-                attachments: [
-                    {
-                        filename: "success.png",
-                        path: path.join(__dirname, "/assets/images/success.png"),
-                        cid: "success"
-                    },
-                    {
-                        filename: "terms.txt",
-                        path: path.join(__dirname, "/assets/documents/terms.txt"),
-                        cid: "terms"
-                    }
-                ]
-            });
-            return res.status(200).json({ success: true, message: 'Compra exitosa', ticketCode: ticketCode });
+
+            const mailingResult = await MailingService.sendPurchaseConfirmation(userEmail, ticketCode);
+
+            if (mailingResult.success) {
+                return res.status(200).json({ success: true, message: 'Compra exitosa', ticketCode: ticketCode });
+            } else {
+                return res.status(500).json({ success: false, message: 'Error en el servidor', error: mailingResult.error });
+            }
         } catch (error) {
             console.error(error);
             return res.status(500).json({ success: false, message: 'Error en el servidor' });
