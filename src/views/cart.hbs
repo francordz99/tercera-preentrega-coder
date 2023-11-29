@@ -71,6 +71,7 @@
                     <th>Precio</th>
                     <th>Cantidad</th>
                     <th>Subtotal</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -80,8 +81,16 @@
                     <td><img src="{{this.product.thumbnail}}" alt="{{this.product.title}}"
                             style="max-width: 50px; max-height: 50px;"></td>
                     <td>{{this.product.price}} USD</td>
-                    <td>{{this.quantity}}</td>
-                    <td>Subtotal USD</td>
+                    <td>
+                        <button onclick="updateQuantity('{{this.product._id}}', 'decrease')">-</button>
+                        <span id="quantity_{{this.product._id}}">{{this.quantity}}</span>
+                        <button onclick="updateQuantity('{{this.product._id}}', 'increase')">+</button>
+                    </td>
+                    <td id="subtotal_{{this.product._id}}" data-price="{{this.product.price}}">Subtotal USD</td>
+                    <td>
+                        <button id="deleteBtn{{this.product._id}}"
+                            class="btn btn-sm btn-danger deleteBtn">Eliminar</button>
+                    </td>
                 </tr>
                 {{/each}}
             </tbody>
@@ -92,6 +101,7 @@
         </div>
 
         <button id="checkout-btn" class="btn btn-primary mt-3">Finalizar Compra</button>
+
     </main>
 
     <footer class="bg-dark text-white p-4 mt-4">
@@ -123,6 +133,113 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function calcularSubtotal(productId) {
+            // Obtén la cantidad y el precio desde el DOM
+            var cantidad = parseInt(document.getElementById('quantity_' + productId).innerText.trim());
+            var precio = parseFloat(document.getElementById('subtotal_' + productId).getAttribute('data-price'));
+            // Calcula el subtotal
+            var subtotal = cantidad * precio;
+
+            // Actualiza el subtotal en la interfaz
+            document.getElementById('subtotal_' + productId).innerText = 'Subtotal USD ' + new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(subtotal);
+
+            // Llama a la función para calcular el total
+            calcularTotal();
+        };
+
+        // Función para calcular el total
+        function calcularTotal() {
+            // Obtén los subtotales de cada producto desde el DOM
+            var subtotales = document.querySelectorAll('[id^=subtotal_]');
+            var total = 0;
+
+            // Suma los subtotales para obtener el total
+            subtotales.forEach(function (subtotalElement) {
+                var cantidad = parseInt(subtotalElement.parentElement.querySelector('[id^=quantity_]').innerText.trim());
+                var precio = parseFloat(subtotalElement.getAttribute('data-price'));
+
+                // Verifica que la cantidad sea un número válido
+                if (!isNaN(cantidad) && !isNaN(precio)) {
+                    total += cantidad * precio;
+                }
+            });
+
+            // Actualiza el total en la interfaz
+            document.getElementById('total').innerHTML = '<strong>Total: USD ' + new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(total) + '</strong>';
+        }
+
+        // Función para actualizar la cantidad
+        function updateQuantity(productId, action) {
+            const spanElement = document.getElementById(`quantity_${productId}`);
+            // Obtener la cantidad actual del span
+            let currentQuantity = parseInt(spanElement.textContent);
+
+            // Realizar la acción correspondiente
+            if (action === 'increase') {
+                currentQuantity++;
+            } else if (action === 'decrease' && currentQuantity > 1) {
+                currentQuantity--;
+            }
+
+            // Actualizar la cantidad en la vista
+            spanElement.textContent = currentQuantity;
+            calcularSubtotal(productId);
+
+            // Realizar la petición al servidor para actualizar la cantidad en la base de datos
+            fetch(`/cart/editProductQuantity/${productId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Puedes incluir tu token aquí si es necesario
+                },
+                body: JSON.stringify({ quantity: currentQuantity }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        console.error('Error al actualizar la cantidad del producto:', data.error);
+                        // Puedes manejar el error según tus necesidades
+                    }
+                })
+                .catch(error => {
+                    console.error('Error de red al actualizar la cantidad del producto:', error);
+                    // Puedes manejar el error de red según tus necesidades
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtons = document.querySelectorAll('.deleteBtn');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.id.replace('deleteBtn', '');
+
+                    fetch(`/cart/deleteProductFromCart/${productId}`, {
+                        method: 'DELETE',
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                location.reload();
+                                console.log('Producto eliminado del carrito con éxito.');
+                            } else {
+                                console.error('Error al eliminar el producto del carrito.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error de red:', error);
+                        });
+                });
+            });
+        });
+    </script>
+
 </body>
 
 </html>

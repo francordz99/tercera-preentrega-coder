@@ -1,7 +1,4 @@
 import express from "express";
-import { __dirname, __filename, } from "./utils.js";
-import { connectDB } from "./config/databaseConfig.js";
-import { engine } from "express-handlebars";
 import methodOverride from 'method-override';
 import path from 'path';
 import bodyParser from 'body-parser';
@@ -14,6 +11,9 @@ import mainRoutes from "./routes/main.routes.js";
 import usersRoutes from "./routes/users.routes.js";
 import messagesRoutes from "./routes/messages.routes.js";
 import productsRoutes from "./routes/products.routes.js";
+import { __dirname, __filename, } from "./utils.js";
+import { connectDB } from "./config/databaseConfig.js";
+import { engine } from "express-handlebars";
 
 // Express & Socket
 
