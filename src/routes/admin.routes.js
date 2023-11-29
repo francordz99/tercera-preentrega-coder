@@ -20,6 +20,6 @@ adminRoutes.delete('/admin/deleteProduct', authenticateToken, checkAdminRole, ad
 
 adminRoutes.put('/admin/editPermissions', authenticateToken, checkAdminRole, adminController.editPermissions);
 
-// Rutas Para Atender En Tiempo Real El Soporte ⚠️
+// Rutas Para Atender En Tiempo Real El Soporte WIP ⚠️
 
 export default adminRoutes;
