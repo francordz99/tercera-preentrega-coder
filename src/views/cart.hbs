@@ -100,7 +100,8 @@
             <strong>Total: USD</strong>
         </div>
 
-        <button id="checkout-btn" class="btn btn-primary mt-3">Finalizar Compra</button>
+        <button id="checkout-btn" class="btn btn-primary mt-3" onclick="buyItems()">Finalizar Compra</button>
+
 
     </main>
 
@@ -133,71 +134,57 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        window.onload = function () {
+            calcularTotal();
+            var subtotales = document.querySelectorAll('[id^=subtotal_]');
+            subtotales.forEach(function (subtotalElement) {
+                var productId = subtotalElement.id.replace('subtotal_', '');
+                calcularSubtotal(productId);
+            });
+        };
+
         function calcularSubtotal(productId) {
-            // Obtén la cantidad y el precio desde el DOM
             var cantidad = parseInt(document.getElementById('quantity_' + productId).innerText.trim());
             var precio = parseFloat(document.getElementById('subtotal_' + productId).getAttribute('data-price'));
-            // Calcula el subtotal
             var subtotal = cantidad * precio;
-
-            // Actualiza el subtotal en la interfaz
             document.getElementById('subtotal_' + productId).innerText = 'Subtotal USD ' + new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD'
             }).format(subtotal);
-
-            // Llama a la función para calcular el total
             calcularTotal();
         };
-
-        // Función para calcular el total
         function calcularTotal() {
-            // Obtén los subtotales de cada producto desde el DOM
             var subtotales = document.querySelectorAll('[id^=subtotal_]');
             var total = 0;
-
-            // Suma los subtotales para obtener el total
             subtotales.forEach(function (subtotalElement) {
                 var cantidad = parseInt(subtotalElement.parentElement.querySelector('[id^=quantity_]').innerText.trim());
                 var precio = parseFloat(subtotalElement.getAttribute('data-price'));
-
-                // Verifica que la cantidad sea un número válido
                 if (!isNaN(cantidad) && !isNaN(precio)) {
                     total += cantidad * precio;
                 }
             });
-
-            // Actualiza el total en la interfaz
             document.getElementById('total').innerHTML = '<strong>Total: USD ' + new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD'
             }).format(total) + '</strong>';
+            return total;
         }
-
-        // Función para actualizar la cantidad
         function updateQuantity(productId, action) {
             const spanElement = document.getElementById(`quantity_${productId}`);
-            // Obtener la cantidad actual del span
             let currentQuantity = parseInt(spanElement.textContent);
-
-            // Realizar la acción correspondiente
             if (action === 'increase') {
                 currentQuantity++;
             } else if (action === 'decrease' && currentQuantity > 1) {
                 currentQuantity--;
             }
-
-            // Actualizar la cantidad en la vista
             spanElement.textContent = currentQuantity;
             calcularSubtotal(productId);
-
-            // Realizar la petición al servidor para actualizar la cantidad en la base de datos
             fetch(`/cart/editProductQuantity/${productId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Puedes incluir tu token aquí si es necesario
                 },
                 body: JSON.stringify({ quantity: currentQuantity }),
             })
@@ -205,12 +192,10 @@
                 .then(data => {
                     if (!data.success) {
                         console.error('Error al actualizar la cantidad del producto:', data.error);
-                        // Puedes manejar el error según tus necesidades
                     }
                 })
                 .catch(error => {
                     console.error('Error de red al actualizar la cantidad del producto:', error);
-                    // Puedes manejar el error de red según tus necesidades
                 });
         }
 
@@ -238,6 +223,23 @@
                 });
             });
         });
+
+        async function buyItems() {
+            try {
+                const totalAmount = calcularTotal();
+                console.log(totalAmount);
+                const response = await axios.post('/cart/buyItems', { total: totalAmount });
+                console.log(response);
+                if (response.data.success) {
+                    alert('Compra exitosa. Tu código de ticket es: ' + response.data.ticketCode);
+                } else {
+                    alert('Error en la compra: ' + response.data.message);
+                }
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+                alert('Error en la compra. Por favor, inténtalo de nuevo más tarde.');
+            }
+        }
     </script>
 
 </body>
