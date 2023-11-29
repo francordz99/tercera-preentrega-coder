@@ -43,3 +43,4 @@ export const checkAuthenticated = (req, res, next) => {
         next();
     }
 };
+

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { config } from '../config/dotenvConfig.js';
-import User from '../models/userModel.js';
+import User from '../dao/models/userModel.js';
 
 const checkAdminRole = async (req, res, next) => {
     try {

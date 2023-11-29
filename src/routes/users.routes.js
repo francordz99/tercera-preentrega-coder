@@ -8,3 +8,4 @@ usersRoutes.get('/profile', authenticateToken, usersController.getInformation); 
 usersRoutes.put('/profile/editInformation', authenticateToken, usersController.editInformation);
 
 export default usersRoutes;
+

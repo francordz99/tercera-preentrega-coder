@@ -1,5 +1,5 @@
-import Product from "../models/productModel.js";
-import User from "../models/userModel.js";
+import Product from "../dao/models/productModel.js";
+import User from "../dao/models/userModel.js";
 
 const adminController = {
     getAdmin: async (req, res) => {

@@ -8,3 +8,4 @@ messagesRoutes.get('/chat', checkUserRole, messagesController.getChat);
 messagesRoutes.post('/chat/send', checkUserRole, messagesController.postMessage);
 
 export default messagesRoutes;
+

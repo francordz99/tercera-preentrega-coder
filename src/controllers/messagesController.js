@@ -1,4 +1,4 @@
-import Message from "../models/messageModel.js";
+import Message from "../dao/models/messageModel.js";
 import configureSocket from '../config/socketConfig.js';
 const { io } = configureSocket();
 

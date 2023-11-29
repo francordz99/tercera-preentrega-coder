@@ -1,5 +1,5 @@
-import User from '../models/userModel.js';
-import Cart from '../models/cartModel.js';
+import User from '../dao/models/userModel.js';
+import Cart from '../dao/models/cartModel.js';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/dotenvConfig.js';
 import { isValidPassword, createHash } from '../utils.js';

@@ -13,3 +13,4 @@ mainRoutes.get('/about', authenticateToken, mainController.getAbout);
 mainRoutes.get('/support', authenticateToken, checkUserRole, mainController.getSupport);
 
 export default mainRoutes;
+

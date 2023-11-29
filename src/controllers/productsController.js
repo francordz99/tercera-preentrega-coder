@@ -1,4 +1,4 @@
-import Product from '../models/productModel.js';
+import Product from '../dao/models/productModel.js';
 
 const productsController = {
     getProducts: async (req, res) => {

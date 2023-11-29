@@ -7,3 +7,4 @@ const productsRoutes = express.Router();
 productsRoutes.get('/products', authenticateToken, productsController.getProducts);
 
 export default productsRoutes;
+

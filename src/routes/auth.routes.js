@@ -19,3 +19,4 @@ authRoutes.post('/login', authController.login);
 authRoutes.get('/logout', authController.logout);
 
 export default authRoutes;
+

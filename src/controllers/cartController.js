@@ -1,6 +1,6 @@
-import Cart from "../models/cartModel.js";
-import Product from "../models/productModel.js";
-import Ticket from "../models/ticketModel.js";
+import Cart from "../dao/models/cartModel.js";
+import Product from "../dao/models/productModel.js";
+import Ticket from "../dao/models/ticketModel.js";
 import jwt from "jsonwebtoken";
 import { transporter } from "../config/nodemailerConfig.js";
 import { config } from "../config/dotenvConfig.js";

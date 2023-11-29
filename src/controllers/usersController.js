@@ -1,4 +1,4 @@
-import User from "../models/userModel.js";
+import User from "../dao/models/userModel.js";
 import jwt from 'jsonwebtoken';
 import { config } from "../config/dotenvConfig.js";
 import { userInfoDto } from "../dto/userInfo.js";
